@@ -100,19 +100,17 @@ const getAllBooksHandler = (request, h) => {
       return nameRegex.test(book.name);
     });
 
-    const response = h
-        .response({
-          status: 'success',
-          data: {
-            books: filteredBooksName.map((book) => ({
-              id: book.id,
-              name: book.name,
-              publisher: book.publisher,
-            })),
-          },
-        })
-        .code(200);
-
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filteredBooksName.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    });
+    response.code(200);
     return response;
   }
 
