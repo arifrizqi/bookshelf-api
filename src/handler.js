@@ -95,21 +95,24 @@ const getAllBooksHandler = (request, h) => {
   }
 
   if (name) {
-    const filteredBooksName = books.filter(
-        (book) => book.name.toLowerCase() === name.toLowerCase(),
-    );
-
-    const response = h.response({
-      status: 'success',
-      data: {
-        books: filteredBooksName.map((book) => ({
-          id: book.id,
-          name: book.name,
-          publisher: book.publisher,
-        })),
-      },
+    const filteredBooksName = books.filter((book) => {
+      const nameRegex = new RegExp(name, 'i');
+      return nameRegex.test(book.name);
     });
-    response.code(200);
+
+    const response = h
+        .response({
+          status: 'success',
+          data: {
+            books: filteredBooksName.map((book) => ({
+              id: book.id,
+              name: book.name,
+              publisher: book.publisher,
+            })),
+          },
+        })
+        .code(200);
+
     return response;
   }
 
