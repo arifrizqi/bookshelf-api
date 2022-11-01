@@ -76,16 +76,79 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
-const getAllBooksHandler = () => ({
-  status: 'success',
-  data: {
-    books: books.map((book) => ({
-      id: book.id,
-      name: book.name,
-      publisher: book.publisher,
-    })),
-  },
-});
+const getAllBooksHandler = (request, h) => {
+  const {name, reading, finished} = request.query;
+
+  if (!name && !reading && !finished) {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (name) {
+    const filteredBooksName = books.filter(
+        (book) => book.name.toLowerCase() === name.toLowerCase(),
+    );
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filteredBooksName.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (reading) {
+    const filteredBooksReading = books.filter(
+        (book) => Number(book.reading) === Number(reading),
+    );
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filteredBooksReading.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  const filteredBooksFinished = books.filter(
+      (book) => Number(book.finished) === Number(finished),
+  );
+
+  const response = h.response({
+    status: 'success',
+    data: {
+      books: filteredBooksFinished.map((book) => ({
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
+      })),
+    },
+  });
+  response.code(200);
+  return response;
+};
 
 const getBookByIdHandler = (request, h) => {
   const {id} = request.params;
